@@ -10,7 +10,6 @@ import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vehicle_wave/UI/shipment_details.dart';
 import 'package:vehicle_wave/common/constant.dart';
-
 import '../common/buttons.dart';
 import '../pages/widgets/bottom_nav.dart';
 import '../pages/widgets/drawer.dart';
@@ -280,8 +279,11 @@ class _MyShipmentsState extends State<MyShipments> {
                               itemCount:
                                   snapshot.data!.snapshot.children.length,
                               itemBuilder: ((context, index) {
+
                                 return AnimatedContainerWidget(
-                                    shipmentData: list[index]);
+                                    shipmentData: list[index],
+                                snapshot: snapshot.data!.snapshot.child((list[index])['order id']).child('AssignedTo'),
+                                );
                               }));
                         }
                       },
@@ -371,6 +373,7 @@ class _MyShipmentsState extends State<MyShipments> {
                                   snapshot.data!.snapshot.children.length,
                               itemBuilder: ((context, index) {
                                 return AnimatedContainerWidget(
+                                  snapshot: snapshot.data!.snapshot.child((list[index])['order id']).child('AssignedTo'),
                                     shipmentData: list[index]);
                               }));
                         }
@@ -386,7 +389,7 @@ class _MyShipmentsState extends State<MyShipments> {
                       stream: ref
                           .child(_auth.currentUser!.uid)
                           .orderByChild('status')
-                          .equalTo('picked up')
+                          .equalTo('PickedUp')
                           .onValue,
                       builder:
                           (context, AsyncSnapshot<DatabaseEvent> snapshot) {
@@ -461,6 +464,7 @@ class _MyShipmentsState extends State<MyShipments> {
                                   snapshot.data!.snapshot.children.length,
                               itemBuilder: ((context, index) {
                                 return AnimatedContainerWidget(
+                                  snapshot: snapshot.data!.snapshot.child((list[index])['order id']).child('AssignedTo'),
                                     shipmentData: list[index]);
                               }));
                         }
@@ -476,7 +480,7 @@ class _MyShipmentsState extends State<MyShipments> {
                       stream: ref
                           .child(_auth.currentUser!.uid)
                           .orderByChild('status')
-                          .equalTo('delivered')
+                          .equalTo('Delivered')
                           .onValue,
                       builder:
                           (context, AsyncSnapshot<DatabaseEvent> snapshot) {
@@ -545,12 +549,14 @@ class _MyShipmentsState extends State<MyShipments> {
                           Map<dynamic, dynamic>? map = snapshot
                               .data?.snapshot.value as Map<dynamic, dynamic>?;
                           List<dynamic> list = map?.values.toList() ?? [];
-
                           return ListView.builder(
                               itemCount:
                                   snapshot.data!.snapshot.children.length,
                               itemBuilder: ((context, index) {
                                 return AnimatedContainerWidget(
+                                  snapshot: snapshot.data!.snapshot
+                                      .child((list[index])['order id'])
+                                      .child('AssignedTo'),
                                     shipmentData: list[index]);
                               }));
                         }
@@ -566,7 +572,7 @@ class _MyShipmentsState extends State<MyShipments> {
                       stream: ref
                           .child(_auth.currentUser!.uid)
                           .orderByChild('status')
-                          .equalTo('canceled')
+                          .equalTo('Canceled')
                           .onValue,
                       builder:
                           (context, AsyncSnapshot<DatabaseEvent> snapshot) {
@@ -641,6 +647,7 @@ class _MyShipmentsState extends State<MyShipments> {
                                   snapshot.data!.snapshot.children.length,
                               itemBuilder: ((context, index) {
                                 return AnimatedContainerWidget(
+                                  snapshot: snapshot.data!.snapshot.child((list[index])['order id']).child('AssignedTo'),
                                     shipmentData: list[index]);
                               }));
                         }
@@ -660,9 +667,9 @@ class _MyShipmentsState extends State<MyShipments> {
 class AnimatedContainerWidget extends StatelessWidget {
   final Map<dynamic, dynamic> shipmentData;
   // final Function() onPressedCallback;
-
+  final DataSnapshot? snapshot;
   AnimatedContainerWidget({
-    required this.shipmentData,
+    required this.shipmentData, this.snapshot,
     // required this.onPressedCallback,
   });
 
@@ -860,7 +867,97 @@ class AnimatedContainerWidget extends StatelessWidget {
                       width: 20,
                     ),
                     WaveButton(
-                        buttonText: 'Check Driver', onPressedCallback: () {}),
+                        buttonText: 'Check Driver', onPressedCallback: () {
+                          if(snapshot==null){
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext contexy) {
+                                  return AlertDialog(
+                                    title: Text('Driver'),
+                                    content: Text('Waiting for dispatching'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Close'),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          }else{
+                            if(snapshot!.exists){
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext contexy) {
+                                    return AlertDialog(
+                                      title: Text('Driver Details'),
+                                      content: Container(
+                                        height: 240,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Name',style: TextStyle(fontWeight: FontWeight.bold),),
+                                              SizedBox(height: 5,),
+                                              Text(snapshot!.child('driverName').value.toString(),),
+                                              SizedBox(height: 5,),
+                                              Text('Company',style: TextStyle(fontWeight: FontWeight.bold),),
+                                              SizedBox(height: 5,),
+                                              Text(snapshot!.child('companyName').value.toString(),),
+                                              SizedBox(height: 5,),
+                                              Text('Phone Number',style: TextStyle(fontWeight: FontWeight.bold),),
+                                              SizedBox(height: 5,),
+                                              Text(snapshot!.child('phoneNumber').value.toString(),),
+
+                                              SizedBox(height: 5,),
+                                              Text('Pickup Time',style: TextStyle(fontWeight: FontWeight.bold),),
+                                              SizedBox(height: 5,),
+                                              Text(snapshot!.child('pickupTime').value.toString(),),
+
+
+                                              SizedBox(height: 5,),
+                                              Text('Drop Time',style: TextStyle(fontWeight: FontWeight.bold),),
+                                              SizedBox(height: 5,),
+                                              Text(snapshot!.child('dropTime').value.toString(),),
+
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Ok',style: TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold
+                                          ),),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }else{
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext contexy) {
+                                    return AlertDialog(
+                                      title: Text('Driver'),
+                                      content: Text('Waiting for dispatching'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Close'),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }
+                          }
+                    }),
                     SizedBox(
                       width: 20,
                     ),
@@ -868,11 +965,12 @@ class AnimatedContainerWidget extends StatelessWidget {
                       buttonText: 'Details',
                       myicon: Icons.navigate_next,
                       onPressedCallback: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute<void>(
                                 builder: (BuildContext context) =>
                                     MyShipmentDetails(
+                                      snapshot: snapshot,
                                       list: shipmentData,
                                     )));
                       },

@@ -14,7 +14,8 @@ String? userId = user?.uid;
 
 class MyShipmentDetails extends StatelessWidget {
   final dynamic list;
-  const MyShipmentDetails({Key? key, this.list}) : super(key: key);
+  final DataSnapshot? snapshot;
+  const MyShipmentDetails({Key? key, this.list, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -597,22 +598,115 @@ class MyShipmentDetails extends StatelessWidget {
                                 EdgeInsets.all(20), // Adjust padding as needed
                           ),
                           onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext contexy) {
-                                  return AlertDialog(
-                                    title: Text('Driver'),
-                                    content: Text('Waiting for dispatching'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Close'),
-                                      ),
-                                    ],
-                                  );
-                                });
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext contexy) {
+                            //       return AlertDialog(
+                            //         title: Text('Driver'),
+                            //         content: Text('Waiting for dispatching'),
+                            //         actions: [
+                            //           TextButton(
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //             child: Text('Close'),
+                            //           ),
+                            //         ],
+                            //       );
+                            //     });
+
+
+                            if(snapshot==null){
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext contexy) {
+                                    return AlertDialog(
+                                      title: Text('Driver'),
+                                      content: Text('Waiting for dispatching'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Close'),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }else{
+                              if(snapshot!.exists){
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext contexy) {
+                                      return AlertDialog(
+                                        title: Text('Driver Details'),
+                                        content: Container(
+                                          height: 240,
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Name',style: TextStyle(fontWeight: FontWeight.bold),),
+                                                SizedBox(height: 5,),
+                                                Text(snapshot!.child('driverName').value.toString(),),
+                                                SizedBox(height: 5,),
+                                                Text('Company',style: TextStyle(fontWeight: FontWeight.bold),),
+                                                SizedBox(height: 5,),
+                                                Text(snapshot!.child('companyName').value.toString(),),
+                                                SizedBox(height: 5,),
+                                                Text('Phone Number',style: TextStyle(fontWeight: FontWeight.bold),),
+                                                SizedBox(height: 5,),
+                                                Text(snapshot!.child('phoneNumber').value.toString(),),
+
+                                                SizedBox(height: 5,),
+                                                Text('Pickup Time',style: TextStyle(fontWeight: FontWeight.bold),),
+                                                SizedBox(height: 5,),
+                                                Text(snapshot!.child('pickupTime').value.toString(),),
+
+
+                                                SizedBox(height: 5,),
+                                                Text('Drop Time',style: TextStyle(fontWeight: FontWeight.bold),),
+                                                SizedBox(height: 5,),
+                                                Text(snapshot!.child('dropTime').value.toString(),),
+
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Ok',style: TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.bold
+                                            ),),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }else{
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext contexy) {
+                                      return AlertDialog(
+                                        title: Text('Driver'),
+                                        content: Text('Waiting for dispatching'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Close'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }
+                            }
+
+
                           },
                           child: Text(
                             'Check Driver',

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 import 'package:geocoding/geocoding.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:uuid/uuid.dart';
@@ -1337,22 +1337,36 @@ class _ShipmentDetailsState extends State<_ShipmentDetails> {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: primaryColr,
                                 textStyle: TextStyle(fontSize: 15)),
-                            onPressed: () {
-                              DatePicker.showDatePicker(context,
-                                  showTitleActions: true,
-                                  minTime: DateTime.now(),
-                                  // maxTime: DateTime(DateTime.now().year,
-                                  //         DateTime.now().month + 1, 1)
-                                  //     .subtract(Duration(days: 1)),
-                                  onConfirm: (date) {
+                            onPressed: () async {
+
+
+                              final picker=await showDatePicker(context: context, initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2030));
+
+                              if(picker!=null){
                                 setState(() {
-                                  selectedDate = date;
+                                  selectedDate = picker;
                                   formattedDate = DateFormat('yyyy-MM-dd')
                                       .format(selectedDate);
                                 });
-                              },
-                                  currentTime: selectedDate,
-                                  locale: LocaleType.en);
+                              }
+
+                            //   DatePicker.showDatePicker(context,
+                            //       showTitleActions: true,
+                            //       minTime: DateTime.now(),
+                            //       // maxTime: DateTime(DateTime.now().year,
+                            //       //         DateTime.now().month + 1, 1)
+                            //       //     .subtract(Duration(days: 1)),
+                            //       onConfirm: (date) {
+                            //     setState(() {
+                            //       selectedDate = date;
+                            //       formattedDate = DateFormat('yyyy-MM-dd')
+                            //           .format(selectedDate);
+                            //     });
+                            //   },
+                            //       currentTime: selectedDate,
+                            //       locale: LocaleType.en);
                             },
                             child: Text('Select Date')),
                         SizedBox(

@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:vehicle_wave/UI/Shipment_box.dart';
 import 'package:vehicle_wave/UI/shipment_details.dart';
@@ -278,20 +277,32 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColr,
                                     textStyle: TextStyle(fontSize: 15)),
-                                onPressed: () {
-                                  DatePicker.showDatePicker(context,
-                                      showTitleActions: true,
-                                      minTime: DateTime.now(),
-                                      // maxTime: DateTime(DateTime.now().year,
-                                      //         DateTime.now().month + 1, 1)
-                                      //     .subtract(Duration(days: 1)),
-                                      onConfirm: (date) {
+                                onPressed: () async {
+                                  final picker = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime(2030));
+
+                                  if (picker != null) {
                                     setState(() {
-                                      selectedDate = date;
+                                      selectedDate = picker;
                                     });
-                                  },
-                                      currentTime: selectedDate,
-                                      locale: LocaleType.en);
+                                  }
+
+                                  // DatePicker.showDatePicker(context,
+                                  //     showTitleActions: true,
+                                  //     minTime: DateTime.now(),
+                                  //     // maxTime: DateTime(DateTime.now().year,
+                                  //     //         DateTime.now().month + 1, 1)
+                                  //     //     .subtract(Duration(days: 1)),
+                                  //     onConfirm: (date) {
+                                  //   setState(() {
+                                  //     selectedDate = date;
+                                  //   });
+                                  // },
+                                  //     currentTime: selectedDate,
+                                  //     locale: LocaleType.en);
                                 },
                                 child: Text('Select Date')),
                             SizedBox(

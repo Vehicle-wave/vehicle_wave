@@ -282,7 +282,7 @@ class _MyShipmentsState extends State<MyShipments> {
 
                                 return AnimatedContainerWidget(
                                     shipmentData: list[index],
-                                snapshot: snapshot.data!.snapshot.child((list[index])['order id']).child('AssignedTo'),
+                              //  snapshot: snapshot.data!.snapshot.child((list[index])['order id']).child('AssignedTo'),
                                 );
                               }));
                         }

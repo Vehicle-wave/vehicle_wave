@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vehicle_wave/UI/auth/login_page.dart';
 import 'package:vehicle_wave/UI/profile_page.dart';
 import 'package:vehicle_wave/pages/bookshipment.dart';
 import 'package:vehicle_wave/pages/customerhomepage.dart';
@@ -14,7 +14,7 @@ class SplashServices {
     if (user != null) {
       Timer(
           Duration(seconds: 3),
-          () => Navigator.push(
+          () => Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: ((context) => CustomBottomNavigationBar(
@@ -23,8 +23,8 @@ class SplashServices {
     } else {
       Timer(
           Duration(seconds: 3),
-          () => Navigator.push(context,
-              MaterialPageRoute(builder: ((context) => ProfilePage()))));
+          () => Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: ((context) => LoginPage()))));
     }
   }
 }

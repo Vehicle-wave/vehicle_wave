@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vehicle_wave/UI/Shipment_box.dart';
@@ -20,7 +21,7 @@ class VehicleWave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'VehicleWave',
       theme: ThemeData(
         primaryColor: _primaryColor,

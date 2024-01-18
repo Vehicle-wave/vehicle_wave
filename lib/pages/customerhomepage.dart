@@ -190,7 +190,40 @@ class _ChomepageState extends State<Chomepage> {
                                   width: 20,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Confirmation'),
+                                            content: Text(
+                                                'Do you want to book the shipment?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  // Close the dialog
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  // Close the dialog and navigate to the "Book Shipment" page
+                                                  Navigator.of(context).pop();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            BookShipment()),
+                                                  );
+                                                },
+                                                child:
+                                                    Text('Go to Check Price'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
                                   child: Column(
                                     children: [
                                       HomeIcon(
